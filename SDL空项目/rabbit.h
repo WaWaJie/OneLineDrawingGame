@@ -46,7 +46,7 @@ public:
 	{
 		if (current_anim)
 		{
-			current_anim->on_render(renderer, pos_dst);
+			current_anim->on_render(renderer, pos_dst, 0, 2.0f);
 		}
 	}
 	

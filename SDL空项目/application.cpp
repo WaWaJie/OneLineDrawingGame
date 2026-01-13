@@ -37,11 +37,10 @@ Application::Application()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_ShowCursor(SDL_DISABLE);
-
-    rabbit=new Rabbit();
        
     ResourcesManager::get_instance()->load(renderer);
-	editor_map = new Map("map.csv");
+    rabbit = new Rabbit();
+    editor_map = new Map("map.csv");
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)

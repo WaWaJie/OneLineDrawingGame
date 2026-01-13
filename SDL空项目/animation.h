@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include"timer.h"
+#include"map.h"
 
 #include<vector>
 #include<SDL.h>
@@ -47,15 +48,15 @@ public:
 	void set_animation(SDL_Texture* texture, int num_h, int num_v, const std::vector<int>& idx_list)
 	{
 		int tex_width, tex_height;
-		// 检查纹理指针
-		if (texture == nullptr) {
-			std::cerr << "ERROR: Texture is nullptr!" << std::endl;
+
+		if (texture == nullptr)
+		{
+			std::cout << "texture is null" << std::endl;
 			return;
 		}
 
 		this->texture = texture;
 		SDL_QueryTexture(texture, nullptr, nullptr, &tex_width, &tex_height);
-
 		width_frame = tex_width / num_h;
 		height_frame = tex_height / num_v;
 
