@@ -46,6 +46,14 @@ ResourcesManager::ResourcesManager()
             animation_resid_list.push_back(path.stem().u8string());
             animation_pool[path.stem().u8string()] = animation;
         };
+
+    loader_pool[".ttf"] =
+        [&](const std::filesystem::path& path)
+        {
+            TTF_Font* font = TTF_OpenFont(path.u8string().c_str(), 16);
+            font_resid_list.push_back(path.stem().u8string());
+            font_pool[path.stem().u8string()] = font;
+		};
 }
 
 ResourcesManager::~ResourcesManager()
@@ -54,4 +62,6 @@ ResourcesManager::~ResourcesManager()
         Mix_FreeChunk(pair.second);
     for (auto& pair : texture_pool)
         SDL_DestroyTexture(pair.second);
+    for(auto&pait:font_pool)
+		TTF_CloseFont(pait.second);
 }

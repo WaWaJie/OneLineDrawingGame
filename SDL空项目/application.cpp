@@ -1,30 +1,7 @@
 ﻿#include"application.h"
 
-
-void Application::render_map(Map*mp)
-{
-    int st_j = 200;
-    for (int i = 0; i < 8; ++i)
-    {
-        for (int j = 0; j < 8; ++j)
-        {
-            int tile_type = mp->m_mp[i][j];
-            std::string tile_name = "tile_" + std::to_string(tile_type);
-            SDL_Rect dst_rect = { j * 96 + st_j,i * 96,96,96 };
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-            SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture(tile_name), NULL, &dst_rect);
-            SDL_RenderDrawRect(renderer, &dst_rect);
-            if (tile_type == (int)TileType::End)
-            {
-                static SDL_Rect rect_src_target = { 0,0,48,48 };
-                SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("target"),&rect_src_target , &dst_rect);
-            }
-        }
-    }
-}
-
 Application::Application()
-	:width(968), height(768), is_quit(false)
+	:width(1068), height(768), is_quit(false)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG|IMG_INIT_JPG);
@@ -39,28 +16,12 @@ Application::Application()
     SDL_ShowCursor(SDL_DISABLE);
        
     ResourcesManager::get_instance()->load(renderer);
-    rabbit = new Rabbit();
-    editor_map = new Map("map.csv");
-    for (int i = 0; i < 8; ++i)
-    {
-        for (int j = 0; j < 8; ++j)
-        {
-            if (editor_map->m_mp[i][j] == (int)TileType::Start)
-            {
-                idx_cur.x = i;
-                idx_cur.y = j; 
-				std::cout << idx_cur.x << "," << idx_cur.y << std::endl;
-                break;
-            }
-        }
-    }
+   
 
 }
 
 Application::~Application()
 {
-    delete editor_map; 
-    delete rabbit; 
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -100,8 +61,8 @@ void Application::on_run()
 
 void Application::on_update(float delta)
 {
-    rabbit->on_update(delta);
-    rabbit->set_pos(idx_cur.x * TILE_SIZE + 200, idx_cur.y * TILE_SIZE);
+	SceneManager::get_instance()->on_update(delta);
+
 }
 
 void Application::on_render()
@@ -110,8 +71,7 @@ void Application::on_render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    render_map(editor_map); //地图
-    rabbit->on_render(renderer);    //玩家
+	SceneManager::get_instance()->on_render(renderer);
     SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("crosshair"), NULL, &rect_cursor);  //准星
 
     SDL_RenderPresent(renderer);

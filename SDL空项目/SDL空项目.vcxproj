@@ -132,15 +132,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="game_scene.cpp" />
     <ClCompile Include="resources_manager.cpp" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
     <ClInclude Include="application.h" />
+    <ClInclude Include="game_scene.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="rabbit.h" />
     <ClInclude Include="resources_manager.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="scene_manager.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>

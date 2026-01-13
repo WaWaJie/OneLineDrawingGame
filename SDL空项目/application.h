@@ -10,6 +10,7 @@
 
 #include"singleton.h"
 #include"resources_manager.h"
+#include"scene_manager.h"
 #include"map.h"
 #include"rabbit.h"
 
@@ -25,20 +26,13 @@ public:
 	void on_input(const SDL_Event& event);
 
 
-	void render_map(Map* mp);
-
 private:
 	const float fps = 60.0f;
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SDL_Event event;
-	int width = 968, height = 768;
+	int width = 1038, height = 768;
 	bool is_quit = false;
 
-	Map* editor_map = nullptr;
-
 	SDL_Rect rect_cursor = { 0,0,38,38 };
-
-	SDL_Point idx_cur = { 0 };
-	Rabbit* rabbit = nullptr;
 };

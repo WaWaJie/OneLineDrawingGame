@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include<algorithm>
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -40,7 +41,9 @@ public:
 				vec.push_back(line.substr(0, pos));
 				line.erase(0, pos + 1);
 			}
-			for (int i = 0; i < min(8, (int)vec.size()); i++)
+
+			int limi=std::min<int>(8,vec.size());
+			for (int i = 0; i < limi; i++)
 			{
 				m_mp[cur_line][i] = std::stoi(vec[i]);
 				if (m_mp[cur_line][i] >= -1 && m_mp[cur_line][i] <= 3)

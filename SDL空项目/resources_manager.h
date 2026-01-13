@@ -26,6 +26,7 @@ public:
 	Mix_Chunk* find_audio(const std::string& id) { return audio_pool[id]; }
 	SDL_Texture* find_texture(const std::string& id) { return texture_pool[id]; }
 	IMG_Animation* find_animation(const std::string& id) { return animation_pool[id]; }
+	TTF_Font* find_font(const std::string& id) { return font_pool[id]; }
 
 	//获取字体、音频、图片资源的名称列表
 	const ResIDList& get_font_resid_list() const { return font_resid_list; }
@@ -38,6 +39,7 @@ private:
 	std::unordered_map<std::string, Mix_Chunk*> audio_pool;
 	std::unordered_map<std::string, SDL_Texture*> texture_pool;
 	std::unordered_map<std::string, IMG_Animation*>animation_pool;
+	std::unordered_map<std::string, TTF_Font*> font_pool;
 	ResIDList font_resid_list, audio_resid_list, texture_resid_list, animation_resid_list;
 	std::unordered_map<std::string, std::function<void(const std::filesystem::path& path)>> loader_pool;
 	

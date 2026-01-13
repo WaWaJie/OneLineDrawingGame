@@ -22,6 +22,9 @@
     <Filter Include="editor">
       <UniqueIdentifier>{38a8f1e2-7631-462d-8b05-aab77a9ace7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{2d7ca4f7-321f-49a3-9f4d-3441464c2496}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="源.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="resources_manager.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="game_scene.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -40,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="singleton.h">
       <Filter>application</Filter>
-    </ClInclude>
-    <ClInclude Include="map.h">
-      <Filter>editor</Filter>
     </ClInclude>
     <ClInclude Include="resources_manager.h">
       <Filter>application</Filter>
@@ -54,6 +57,18 @@
       <Filter>application</Filter>
     </ClInclude>
     <ClInclude Include="rabbit.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="game_scene.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_manager.h">
       <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>
