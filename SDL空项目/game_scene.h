@@ -20,13 +20,17 @@ private:
 	void render_map(SDL_Renderer* renderer, Map* mp);
 	void render_menu(SDL_Renderer* renderer);
 
-private:
-	Map* editor_map = nullptr;
-	SDL_Point idx_cur = { 0 };
-	Rabbit* rabbit = nullptr;
+	void update_tile();
 
-	bool is_button_down = false;
+private:
+	Map* map_ini = nullptr;		//初始地图
+	Map* map_cache = nullptr;	//缓存地图
+	Rabbit* rabbit = nullptr;	
+
+	bool is_button_down = false;	
 	SDL_Point cursor_pos = { 0 };
+	SDL_Point cur_tile_idx_cursor = { 0 };
+	SDL_Point idx_cur = { 0 };
 
 	int st_j = 300;
 
@@ -35,4 +39,5 @@ private:
 
 	SDL_Color color_text_fg = { 255,255,255,255 };
     SDL_Color color_text_bg = { 125,125,125,255 };
+
 };

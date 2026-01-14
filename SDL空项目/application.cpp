@@ -90,4 +90,5 @@ void Application::on_input(const SDL_Event& event)
         rect_cursor.y = event.motion.y - rect_cursor.h / 2;
         break;
     }
+    SceneManager::get_instance()->on_input(event);
 }

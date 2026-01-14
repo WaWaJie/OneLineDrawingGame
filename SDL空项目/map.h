@@ -52,8 +52,21 @@ public:
 			}
 			cur_line++;
 		}
+		//check();
 	}
 
+	void check()
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				std::cout << m_mp[i][j] << "\t";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
 
 public:
 	int m_mp[8][8];

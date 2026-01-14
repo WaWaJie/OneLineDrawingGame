@@ -1,4 +1,6 @@
 ﻿#include"game_scene.h"
+//cout
+
 
 void GameScene::on_enter()
 {
@@ -31,12 +33,13 @@ void GameScene::render_map(SDL_Renderer*renderer,Map* mp)
 GameScene::GameScene()
 {
     rabbit = new Rabbit();
-    editor_map = new Map("map.csv");
+    map_ini = new Map("map.csv");
+    map_cache=new Map("map.csv");
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
         {
-            if (editor_map->m_mp[i][j] == (int)TileType::Start)
+            if (map_ini->m_mp[i][j] == (int)TileType::Start)
             {
                 idx_cur.x = i;
                 idx_cur.y = j;
@@ -49,14 +52,15 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-    delete editor_map;
+    delete map_ini;
     delete rabbit;
 }
 
 void GameScene::on_update(float delta)
 {
+    update_tile();
     rabbit->on_update(delta);
-    rabbit->set_pos(idx_cur.x * TILE_SIZE + st_j, idx_cur.y * TILE_SIZE);
+    rabbit->set_pos(idx_cur.y * TILE_SIZE + st_j, idx_cur.x * TILE_SIZE);
 }
 
 void GameScene::on_render(SDL_Renderer* renderer)
@@ -67,7 +71,7 @@ void GameScene::on_render(SDL_Renderer* renderer)
     static SDL_Rect rect_bg_dst = { 0,0,st_j,786 };
     //SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("880"), NULL, &rect_bg_dst);
 	render_menu(renderer);          //菜单
-    render_map(renderer,editor_map); //地图
+    render_map(renderer,map_cache); //地图
     rabbit->on_render(renderer);    //玩家
 
 }
@@ -79,14 +83,18 @@ void GameScene::on_input(const SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         is_button_down = true;
         break;
+    case SDL_MOUSEBUTTONUP:
+        is_button_down = false;
+        break;
     case SDL_MOUSEMOTION:
         if (is_button_down)
         {
             cursor_pos.x = event.motion.x;
             cursor_pos.y = event.motion.y;
-        }
+            cur_tile_idx_cursor = { cursor_pos.y / TILE_SIZE,(cursor_pos.x - st_j) / TILE_SIZE };
+        }  
         break;
-
+           
     }
 }
 
@@ -96,7 +104,7 @@ void GameScene::render_menu(SDL_Renderer* renderer)
     static SDL_Rect rect_dst_need = rect_dst_ini;
     static SDL_Rect rect_dst_text_fg = rect_dst_need;
     static SDL_Rect rect_dst_text_bg = rect_dst_need;
-    static std::string tile_def[5] = { u8"禁用格",u8"正常格",u8"已选格",u8"起始格",u8"终止格" };
+    static std::string tile_def[5] = { u8"禁用格",u8"正常格",u8"已选格",u8"起始格",u8"终点格" };
     const static float text_scale = 2.5f;
     for (int i = 0; i < 5; i++)
     {
@@ -130,4 +138,26 @@ void GameScene::render_menu(SDL_Renderer* renderer)
         SDL_FreeSurface(surf_text_bg);
         SDL_FreeSurface(surf_text_fg);
     }
+}
+
+void GameScene::update_tile()
+{
+    //越界检查
+    if (cursor_pos.x < st_j || cur_tile_idx_cursor.x < 0 || cur_tile_idx_cursor.y < 0 || cur_tile_idx_cursor.x >= 8 || cur_tile_idx_cursor.y >= 8)
+        return;
+	bool is_in_target_tile = (map_cache->m_mp[cur_tile_idx_cursor.x][cur_tile_idx_cursor.y] == (int)TileType::Idle)
+		|| (map_cache->m_mp[cur_tile_idx_cursor.x][cur_tile_idx_cursor.y] == (int)TileType::End);
+
+	if (is_in_target_tile && is_button_down)
+	{
+		//检查与当前游标所在的格子与当前角色所在的格子的曼哈顿距离是否为1
+        int manhaton_distance = abs(idx_cur.x - cur_tile_idx_cursor.x) + abs(idx_cur.y - cur_tile_idx_cursor.y);
+        if (manhaton_distance == 1)
+        {
+            //更新缓存地图和角色位置
+            map_cache->m_mp[idx_cur.x][idx_cur.y] = (int)TileType::Selected;
+            idx_cur = cur_tile_idx_cursor;
+            if (map_cache->m_mp[idx_cur.x][idx_cur.y] != (int)TileType::End)map_cache->m_mp[idx_cur.x][idx_cur.y] = (int)TileType::Selected;
+        }
+	}
 }
