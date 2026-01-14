@@ -45,7 +45,7 @@ public:
 		rect_src_list.emplace_back();
 	}
 
-	void set_animation(SDL_Texture* texture, int num_h, int num_v, const std::vector<int>& idx_list)
+	void set_animation(SDL_Texture* texture, int num_h, int num_v, const std::vector<int>& idx_list)//水平数量和垂直数量
 	{
 		int tex_width, tex_height;
 

@@ -134,6 +134,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="game_scene.cpp" />
     <ClCompile Include="resources_manager.cpp" />
+    <ClCompile Include="text_button.h" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>

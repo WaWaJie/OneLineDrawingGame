@@ -39,6 +39,9 @@
     <ClCompile Include="game_scene.cpp">
       <Filter>game</Filter>
     </ClCompile>
+    <ClCompile Include="text_button.h">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">

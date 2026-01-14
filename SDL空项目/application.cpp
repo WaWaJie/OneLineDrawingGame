@@ -7,6 +7,8 @@ Application::Application()
     IMG_Init(IMG_INIT_PNG|IMG_INIT_JPG);
     Mix_Init(MIX_INIT_MP3);
     TTF_Init();
+    
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 
     SetProcessDPIAware();
 
@@ -14,6 +16,7 @@ Application::Application()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_ShowCursor(SDL_DISABLE);
+
        
     ResourcesManager::get_instance()->load(renderer);
    
