@@ -16,7 +16,7 @@ public:
 	void on_exit()override;
 
 	void on_update(float delta)override;
-	void on_render(SDL_Renderer*renderer)override;
+	void on_render(SDL_Renderer* renderer)override;
 	void on_input(const SDL_Event& event)override;
 
 private:
@@ -59,9 +59,9 @@ private:
 private:
 	Map* map_ini = nullptr;		//初始地图
 	Map* map_cache = nullptr;	//缓存地图
-	Rabbit* rabbit = nullptr;	
+	Rabbit* rabbit = nullptr;
 
-	bool is_button_down = false;	
+	bool is_button_down = false;
 	bool can_restart = true;
 	SDL_Point cur_tile_idx_cursor = { 0 };
 	SDL_Point idx_cur = { 0 };
@@ -72,7 +72,7 @@ private:
 	SDL_Texture* tex_text_foreground = nullptr;
 
 	SDL_Color color_text_fg = { 255,255,255,255 };
-    SDL_Color color_text_bg = { 125,125,125,255 };
+	SDL_Color color_text_bg = { 125,125,125,255 };
 
 	int tile_num_needed = 0;
 	int tile_num_owned = 0;

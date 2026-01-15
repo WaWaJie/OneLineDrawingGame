@@ -23,9 +23,7 @@ public:
 	~TextButton() = default;
 	void on_render(SDL_Renderer* renderer)
 	{
-		//确定字体颜色和位置，一会挪到on_update中
-		static TTF_Font* font = ResourcesManager::get_instance()->find_font("ipix");
-		TTF_SetFontSize(font, size);
+		TTF_SetFontSize(ResourcesManager::get_instance()->find_font("ipix"), size);
 		//渲染
 		SDL_Rect rect_tmp = rect_dst_final;
 		int height_line = rect_dst_final.h / text_list.size();
@@ -33,7 +31,7 @@ public:
 		for (const auto& text_line : text_list)
 		{
 			SDL_DestroyTexture(tex_text);
-			suf_text = TTF_RenderUTF8_Blended(font, text_line.c_str(), color);
+			suf_text = TTF_RenderUTF8_Blended(ResourcesManager::get_instance()->find_font("ipix"), text_line.c_str(), color);
 			tex_text = SDL_CreateTextureFromSurface(renderer, suf_text);
 			SDL_RenderCopy(renderer, tex_text, nullptr, &rect_tmp);
 			SDL_FreeSurface(suf_text);
@@ -126,6 +124,6 @@ private:
 	State current_state = State::Idle;
 	bool is_pushed = false;
 	bool can_hovered = true;
-	int size = 32;
+	int size = 50;
 	TextList text_list;
 };

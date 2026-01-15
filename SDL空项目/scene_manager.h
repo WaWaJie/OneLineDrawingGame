@@ -2,27 +2,37 @@
 
 #include"scene.h"
 #include"game_scene.h"
+#include"menu_scene.h"
 #include"singleton.h"
 
 
 class SceneManager : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
-public:
+
+private:
 	SceneManager()
 	{
-		menu_scene = new Scene(); //这里可以替换为具体的场景类
+		menu_scene = new MenuScene(); //这里可以替换为具体的场景类
 		game_scene = new GameScene();
 		editor_scene = new Scene();
-		current_scene = game_scene;
+		current_scene = menu_scene;
 		current_scene->on_enter();
 	}
 
+public:
+	
 
 	void on_update(float delta)
 	{
 		if (current_scene)
 			current_scene->on_update(delta);
+
+		if (current_scene_type != ConfigManager::get_instance()->current_scene_type)
+		{
+			current_scene_type = ConfigManager::get_instance()->current_scene_type;
+			switch_to(current_scene_type);
+		}
 	}
 	void on_render(SDL_Renderer * renderer)
 	{
@@ -61,4 +71,5 @@ private:
 	Scene* game_scene = nullptr;
 	Scene* editor_scene = nullptr;
 
+	SceneType current_scene_type = SceneType::Menu;
 };

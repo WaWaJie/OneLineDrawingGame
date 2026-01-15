@@ -39,6 +39,7 @@ void Application::on_run()
     //获取时间
     Uint64 last_counter = SDL_GetPerformanceCounter();
     Uint64 counter_freq = SDL_GetPerformanceFrequency();
+    Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("game_audio"), -1);
 
     while (!is_quit)
     {
@@ -59,6 +60,7 @@ void Application::on_run()
         //画面渲染
         on_render();
     }
+    Mix_HaltChannel(-1);
 
 }
 

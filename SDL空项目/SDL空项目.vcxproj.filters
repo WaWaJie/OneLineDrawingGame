@@ -19,11 +19,17 @@
     <Filter Include="thirdparty">
       <UniqueIdentifier>{09faa34e-729d-448b-a1f5-3d968b32fa1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="editor">
+    <Filter Include="scene">
+      <UniqueIdentifier>{d02cab14-dc10-450d-a3f3-131eed11119b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\editor">
       <UniqueIdentifier>{38a8f1e2-7631-462d-8b05-aab77a9ace7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game">
+    <Filter Include="scene\game">
       <UniqueIdentifier>{2d7ca4f7-321f-49a3-9f4d-3441464c2496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\menu">
+      <UniqueIdentifier>{a23b606b-2a31-4b76-9b57-0e358f9400fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,10 +43,13 @@
       <Filter>application</Filter>
     </ClCompile>
     <ClCompile Include="game_scene.cpp">
-      <Filter>game</Filter>
+      <Filter>scene\game</Filter>
     </ClCompile>
     <ClCompile Include="text_button.h">
       <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="menu_scene.cpp">
+      <Filter>scene\menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +78,15 @@
       <Filter>application</Filter>
     </ClInclude>
     <ClInclude Include="game_scene.h">
-      <Filter>game</Filter>
+      <Filter>scene\game</Filter>
     </ClInclude>
     <ClInclude Include="scene_manager.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_scene.h">
+      <Filter>scene\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="config_manager.h">
       <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>

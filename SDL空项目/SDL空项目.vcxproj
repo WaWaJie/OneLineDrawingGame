@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClCompile Include="game_scene.cpp" />
+    <ClCompile Include="menu_scene.cpp" />
     <ClCompile Include="resources_manager.cpp" />
     <ClCompile Include="text_button.h" />
     <ClCompile Include="源.cpp" />
@@ -140,8 +141,10 @@
   <ItemGroup>
     <ClInclude Include="animation.h" />
     <ClInclude Include="application.h" />
+    <ClInclude Include="config_manager.h" />
     <ClInclude Include="game_scene.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="menu_scene.h" />
     <ClInclude Include="rabbit.h" />
     <ClInclude Include="resources_manager.h" />
     <ClInclude Include="scene.h" />

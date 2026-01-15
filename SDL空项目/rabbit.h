@@ -46,7 +46,7 @@ public:
 	{
 		if (current_anim)
 		{
-			current_anim->on_render(renderer, pos_dst, 0, 2.0f);
+			current_anim->on_render(renderer, pos_dst, 0, scale);
 		}
 	}
 	
@@ -82,6 +82,8 @@ public:
 		pos_dst.y = y;
 	}
 
+	void set_scale(float scale) { this->scale = scale; }
+
 private:
 	Animation* current_anim = nullptr;
 	Animation* anim_left = nullptr;
@@ -92,4 +94,5 @@ private:
 	FacingDirection facing = FacingDirection::Down;
 
 	SDL_Point pos_dst = { 0 };
+	float scale = 2.0f;
 };
