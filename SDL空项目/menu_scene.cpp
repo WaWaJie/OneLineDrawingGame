@@ -41,11 +41,15 @@ void MenuScene::on_update(float delta)
 	{
 		ConfigManager::get_instance()->current_scene_type = SceneType::Game;
 	}
+	if (button_level_editor->get_pushed())
+	{
+		ConfigManager::get_instance()->current_scene_type = SceneType::Editor;
+	}
 }
 
 void MenuScene::on_render(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("menu_background"), nullptr, nullptr);
+	SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("menu_background2"), nullptr, nullptr);
 
 	button_start_game->on_render(renderer);
 	button_level_editor->on_render(renderer);

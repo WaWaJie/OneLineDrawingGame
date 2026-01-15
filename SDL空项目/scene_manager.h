@@ -4,6 +4,7 @@
 #include"game_scene.h"
 #include"menu_scene.h"
 #include"singleton.h"
+#include"editor_scene.h"
 
 
 class SceneManager : public Singleton<SceneManager>
@@ -15,7 +16,7 @@ private:
 	{
 		menu_scene = new MenuScene(); //这里可以替换为具体的场景类
 		game_scene = new GameScene();
-		editor_scene = new Scene();
+		editor_scene = new EditorScene();
 		current_scene = menu_scene;
 		current_scene->on_enter();
 	}

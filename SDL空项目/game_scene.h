@@ -6,6 +6,8 @@
 #include"text_button.h"
 #include"config_manager.h"
 
+#include<Windows.h>	
+
 class GameScene : public Scene
 {
 public:
@@ -16,7 +18,7 @@ public:
 	void on_exit()override;
 
 	void on_update(float delta)override;
-	void on_render(SDL_Renderer*renderer)override;
+	void on_render(SDL_Renderer* renderer)override;
 	void on_input(const SDL_Event& event)override;
 
 private:
@@ -33,6 +35,8 @@ private:
 			std::cout << "You Win!" << std::endl;
 		}
 	}
+
+	void import_map();
 
 	void game_restart()
 	{
