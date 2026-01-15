@@ -16,6 +16,7 @@ void GameScene::on_enter()
 
 void GameScene::on_exit()
 {
+    ConfigManager::get_instance()->is_infinite = false;
 }
 
 void GameScene::render_map(SDL_Renderer*renderer,Map* mp)
@@ -51,6 +52,13 @@ GameScene::GameScene()
     anim_win->set_on_finished([&]()
         {
             win_anim_can_show = false;
+             
+            if (ConfigManager::get_instance()->is_infinite)
+            {
+                anim_win->reset(); 
+                generate_random_map();
+                game_restart();
+            }
         });
 
     for (int i = 0; i < 8; ++i)
@@ -359,3 +367,352 @@ void GameScene::import_map()
         SDL_Log(u8"用户取消了导入操作");
     }
 }
+
+// 尝试生成一条单一路径的地图
+bool generate_single_path_map(int maze[8][8], std::mt19937& gen)
+{
+    std::uniform_int_distribution<> dis(0, 7);
+    std::uniform_int_distribution<> percent_dis(0, 99);
+
+    // 1. 随机选择起点和终点（确保它们在不同位置）
+    SDL_Point start, end;
+
+    // 使用4种固定模式，确保距离足够
+    int pattern = percent_dis(gen) % 4;
+    switch (pattern) {
+    case 0: start = { 0, 0 }; end = { 7, 7 }; break;
+    case 1: start = { 0, 7 }; end = { 7, 0 }; break;
+    case 2: start = { 1, 1 }; end = { 6, 6 }; break;
+    case 3: start = { 1, 6 }; end = { 6, 1 }; break;
+    }
+
+    // 2. 初始化地图
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            maze[i][j] = -1; // 全部设为禁用格
+        }
+    }
+
+    maze[start.x][start.y] = (int)TileType::Start;
+    maze[end.x][end.y] = (int)TileType::End;
+
+    // 3. 生成路径
+    std::vector<SDL_Point> path;
+    path.push_back(start);
+
+    SDL_Point current = start;
+    bool visited[8][8] = { false };
+    visited[start.x][start.y] = true;
+
+    int max_steps = 30; // 最大步数限制
+    int step = 0;
+
+    while ((current.x != end.x || current.y != end.y) && step < max_steps) {
+        step++;
+
+        // 获取所有可能的移动方向
+        std::vector<SDL_Point> possible_moves;
+        SDL_Point moves[4] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+
+        for (const auto& move : moves) {
+            SDL_Point next = { current.x + move.x, current.y + move.y };
+
+            // 检查边界
+            if (next.x < 0 || next.x >= 8 || next.y < 0 || next.y >= 8) {
+                continue;
+            }
+
+            // 检查是否已访问
+            if (visited[next.x][next.y]) {
+                continue;
+            }
+
+            // 检查格子类型：只能移动到禁用格或终点
+            if (maze[next.x][next.y] == -1 || maze[next.x][next.y] == (int)TileType::End) {
+                possible_moves.push_back(next);
+            }
+        }
+
+        // 如果没有可能的移动，路径生成失败
+        if (possible_moves.empty()) {
+            // 尝试回溯一步（最多回溯3步）
+            bool backtrack_success = false;
+            for (int backtrack = 0; backtrack < 3 && path.size() > 1; ++backtrack) {
+                // 移除最后一步
+                path.pop_back();
+                SDL_Point prev = path.back();
+
+                // 将当前位置恢复为禁用格
+                if (!(current.x == start.x && current.y == start.y) &&
+                    !(current.x == end.x && current.y == end.y)) {
+                    maze[current.x][current.y] = -1;
+                    visited[current.x][current.y] = false;
+                }
+
+                current = prev;
+
+                // 重新检查可能的移动
+                possible_moves.clear();
+                for (const auto& move : moves) {
+                    SDL_Point next = { current.x + move.x, current.y + move.y };
+
+                    if (next.x < 0 || next.x >= 8 || next.y < 0 || next.y >= 8) continue;
+                    if (visited[next.x][next.y]) continue;
+                    if (maze[next.x][next.y] == -1 || maze[next.x][next.y] == (int)TileType::End) {
+                        possible_moves.push_back(next);
+                    }
+                }
+
+                if (!possible_moves.empty()) {
+                    backtrack_success = true;
+                    break;
+                }
+            }
+
+            if (!backtrack_success) {
+                return false; // 生成失败
+            }
+        }
+
+        // 选择下一个移动
+        SDL_Point next;
+
+        // 计算到终点的方向
+        int dx = end.x - current.x;
+        int dy = end.y - current.y;
+
+        // 创建一个偏好列表
+        std::vector<SDL_Point> preferred_moves;
+        std::vector<SDL_Point> other_moves;
+
+        for (const auto& move : possible_moves) {
+            // 判断是否朝向终点
+            bool toward_end = false;
+            if (dx > 0 && move.x > current.x) toward_end = true;
+            if (dx < 0 && move.x < current.x) toward_end = true;
+            if (dy > 0 && move.y > current.y) toward_end = true;
+            if (dy < 0 && move.y < current.y) toward_end = true;
+
+            if (toward_end) {
+                preferred_moves.push_back(move);
+            }
+            else {
+                other_moves.push_back(move);
+            }
+        }
+
+        // 70%概率选择朝向终点的方向，30%概率选择其他方向
+        if (!preferred_moves.empty() && percent_dis(gen) % 100 < 70) {
+            std::uniform_int_distribution<> pref_dis(0, preferred_moves.size() - 1);
+            next = preferred_moves[pref_dis(gen)];
+        }
+        else if (!other_moves.empty()) {
+            std::uniform_int_distribution<> other_dis(0, other_moves.size() - 1);
+            next = other_moves[other_dis(gen)];
+        }
+        else {
+            std::uniform_int_distribution<> move_dis(0, possible_moves.size() - 1);
+            next = possible_moves[move_dis(gen)];
+        }
+
+        // 移动到下一个位置
+        current = next;
+        visited[current.x][current.y] = true;
+        path.push_back(current);
+
+        // 将路径上的格子设为正常格（除了起点和终点）
+        if (!(current.x == start.x && current.y == start.y) &&
+            !(current.x == end.x && current.y == end.y)) {
+            maze[current.x][current.y] = (int)TileType::Idle;
+        }
+    }
+
+    // 检查是否到达终点
+    if (current.x != end.x || current.y != end.y) {
+        return false; // 没有到达终点
+    }
+
+    // 检查路径长度是否合理（至少10个Idle格子）
+    int idle_count = 0;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (maze[i][j] == (int)TileType::Idle) {
+                idle_count++;
+            }
+        }
+    }
+
+    if (idle_count < 8) {
+        return false; // 路径太短
+    }
+
+    return true; // 生成成功
+}
+
+// 生成保底地图（永远不会失败）
+void generate_fallback_map(int maze[8][8])
+{
+    // 使用一个固定的、永远不会失败的蛇形路径
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            maze[i][j] = -1; // 全部设为禁用格
+        }
+    }
+
+    // 起点在(0,0)，终点在(7,7)
+    maze[0][0] = (int)TileType::Start;
+    maze[7][7] = (int)TileType::End;
+
+    // 生成一个复杂的蛇形路径
+    // 第一行：从(0,0)到(0,6)
+    for (int j = 1; j <= 6; ++j) {
+        maze[0][j] = (int)TileType::Idle;
+    }
+
+    // 向下：(0,6)到(6,6)
+    for (int i = 1; i <= 6; ++i) {
+        maze[i][6] = (int)TileType::Idle;
+    }
+
+    // 向左：(6,6)到(6,1)
+    for (int j = 5; j >= 1; --j) {
+        maze[6][j] = (int)TileType::Idle;
+    }
+
+    // 向上：(6,1)到(1,1)
+    for (int i = 5; i >= 1; --i) {
+        maze[i][1] = (int)TileType::Idle;
+    }
+
+    // 向右：(1,1)到(1,5)
+    for (int j = 2; j <= 5; ++j) {
+        maze[1][j] = (int)TileType::Idle;
+    }
+
+    // 向下：(1,5)到(5,5)
+    for (int i = 2; i <= 5; ++i) {
+        maze[i][5] = (int)TileType::Idle;
+    }
+
+    // 向左：(5,5)到(5,2)
+    for (int j = 4; j >= 2; --j) {
+        maze[5][j] = (int)TileType::Idle;
+    }
+
+    // 向上：(5,2)到(2,2)
+    for (int i = 4; i >= 2; --i) {
+        maze[i][2] = (int)TileType::Idle;
+    }
+
+    // 向右：(2,2)到(2,4)
+    for (int j = 3; j <= 4; ++j) {
+        maze[2][j] = (int)TileType::Idle;
+    }
+
+    // 向下：(2,4)到(4,4)
+    for (int i = 3; i <= 4; ++i) {
+        maze[i][4] = (int)TileType::Idle;
+    }
+
+    // 向左：(4,4)到(4,3)
+    maze[4][3] = (int)TileType::Idle;
+
+    // 向下：(4,3)到(7,3)
+    for (int i = 5; i <= 7; ++i) {
+        maze[i][3] = (int)TileType::Idle;
+    }
+
+    // 向右：(7,3)到(7,7)
+    for (int j = 4; j <= 7; ++j) {
+        if (maze[7][j] != (int)TileType::End) {
+            maze[7][j] = (int)TileType::Idle;
+        }
+    }
+}
+
+// 更简单的保底地图（如果上面的太复杂）
+void generate_simple_fallback_map(int maze[8][8])
+{
+    // 最简单的L形路径
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            maze[i][j] = -1;
+        }
+    }
+
+    maze[0][0] = (int)TileType::Start;
+    maze[7][7] = (int)TileType::End;
+
+    // 向右走7步
+    for (int j = 1; j <= 7; ++j) {
+        maze[0][j] = (int)TileType::Idle;
+    }
+
+    // 向下走6步（跳过已经设置为Idle的(0,7)）
+    for (int i = 1; i <= 6; ++i) {
+        maze[i][7] = (int)TileType::Idle;
+    }
+}
+
+void GameScene::generate_random_map()
+{
+    // 创建随机数生成器
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 7);
+    std::uniform_int_distribution<> percent_dis(0, 99);
+
+    // 1. 先预设一个简单的地图作为保底
+    int temp_map[8][8];
+
+    // 2. 使用多次尝试的方法，如果失败则使用保底方案
+    bool success = false;
+    int max_attempts = 10; // 最多尝试10次
+
+    for (int attempt = 0; attempt < max_attempts && !success; ++attempt) {
+        success = generate_single_path_map(temp_map, gen);
+        if (success) {
+            SDL_Log(u8"第%d次尝试生成地图成功", attempt + 1);
+        }
+    }
+
+    // 3. 如果所有尝试都失败，使用保底方案
+    if (!success) {
+        SDL_Log(u8"多次尝试失败，使用保底地图");
+        generate_fallback_map(temp_map);
+    }
+
+    // 4. 更新地图对象
+    delete map_ini;
+    delete map_cache;
+
+    map_ini = new Map();
+    map_cache = new Map();
+
+    // 复制地图数据
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            map_ini->m_mp[i][j] = temp_map[i][j];
+            map_cache->m_mp[i][j] = temp_map[i][j];
+        }
+    }
+
+    // 5. 重新计算需要走过的格子数和起点位置
+    tile_num_needed = 0;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (map_ini->m_mp[i][j] == (int)TileType::Start) {
+                idx_cur.x = i;
+                idx_cur.y = j;
+                SDL_Log(u8"地图起点: (%d, %d)", idx_cur.x, idx_cur.y);
+            }
+            else if (map_ini->m_mp[i][j] == (int)TileType::Idle) {
+                tile_num_needed++;
+            }
+        }
+    }
+
+    SDL_Log(u8"地图生成成功！需要走过的格子数: %d", tile_num_needed);
+}
+
+

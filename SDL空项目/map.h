@@ -18,7 +18,6 @@ enum class TileType
 class Map
 {
 public:
-    // map.h - 修改后的构造函数
     Map(const char* file_path)
     {
         for (int i = 0; i < 8; ++i)
@@ -90,6 +89,12 @@ public:
             }
             cur_line++;
         }
+    }
+
+    Map() {
+        for (int i = 0; i < 8; ++i)
+            for (int j = 0; j < 8; ++j)
+                m_mp[i][j] = -1;
     }
 
 	void check()

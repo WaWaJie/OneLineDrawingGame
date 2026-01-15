@@ -45,6 +45,11 @@ void MenuScene::on_update(float delta)
 	{
 		ConfigManager::get_instance()->current_scene_type = SceneType::Editor;
 	}
+	if (button_infinite->get_pushed())
+	{
+		ConfigManager::get_instance()->is_infinite = true;
+		ConfigManager::get_instance()->current_scene_type = SceneType::Game;
+	}
 }
 
 void MenuScene::on_render(SDL_Renderer* renderer)

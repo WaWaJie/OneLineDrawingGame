@@ -8,6 +8,12 @@
 
 #include<Windows.h>	
 
+#include <random>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <sstream>
+
 class GameScene : public Scene
 {
 public:
@@ -26,6 +32,7 @@ private:
 	void render_menu(SDL_Renderer* renderer);
 
 	void update_tile();
+	void generate_random_map();
 
 	void check_win()
 	{
@@ -59,6 +66,80 @@ private:
 		}
 
 	}
+
+    bool is_map_reachable()
+    {
+        // 找到起点
+        SDL_Point start;
+        bool found_start = false;
+
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                if (map_ini->m_mp[i][j] == (int)TileType::Start) {
+                    start.x = i;
+                    start.y = j;
+                    found_start = true;
+                    break;
+                }
+            }
+            if (found_start) break;
+        }
+
+        if (!found_start) return false;
+
+        // 使用BFS检查从起点是否可以到达所有正常格、已选格和终点
+        bool visited[8][8] = { false };
+        std::queue<SDL_Point> q;
+        q.push(start);
+        visited[start.x][start.y] = true;
+
+        int reachable_count = 0;
+        int total_reachable = 0;
+
+        // 计算需要到达的格子总数
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                int tile = map_ini->m_mp[i][j];
+                if (tile == (int)TileType::Idle || tile == (int)TileType::End) {
+                    total_reachable++;
+                }
+            }
+        }
+
+        // BFS
+        while (!q.empty()) {
+            SDL_Point current = q.front();
+            q.pop();
+
+            // 检查当前格子
+            int tile = map_ini->m_mp[current.x][current.y];
+            if (tile == (int)TileType::Idle || tile == (int)TileType::End) {
+                reachable_count++;
+            }
+
+            // 检查四个方向
+            SDL_Point directions[4] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+            for (const auto& dir : directions) {
+                SDL_Point next = { current.x + dir.x, current.y + dir.y };
+
+                // 检查边界
+                if (next.x < 0 || next.x >= 8 || next.y < 0 || next.y >= 8) continue;
+
+                // 检查是否已访问
+                if (visited[next.x][next.y]) continue;
+
+                // 检查是否可通行（不是禁用格）
+                int next_tile = map_ini->m_mp[next.x][next.y];
+                if (next_tile != (int)TileType::Failed) {
+                    visited[next.x][next.y] = true;
+                    q.push(next);
+                }
+            }
+        }
+
+        // 如果所有需要到达的格子都可达，返回true
+        return reachable_count == total_reachable;
+    }
 
 private:
 	Map* map_ini = nullptr;		//初始地图

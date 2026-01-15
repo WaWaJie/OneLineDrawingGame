@@ -13,4 +13,6 @@ public:
     SceneType current_scene_type= SceneType::Menu;
     SDL_Point pos_cursor = { 0 };
 
+    bool is_infinite = false;
+
 };
