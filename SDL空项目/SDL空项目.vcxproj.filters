@@ -51,6 +51,9 @@
     <ClCompile Include="menu_scene.cpp">
       <Filter>scene\menu</Filter>
     </ClCompile>
+    <ClCompile Include="editor_scene.cpp">
+      <Filter>scene\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="config_manager.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_scene.h">
+      <Filter>scene\editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
