@@ -417,7 +417,9 @@ void GameScene::export_map()
         {
             for (int j = 0; j < 8; ++j)
             {
-                csvFile << map_cache->m_mp[i][j]; // 写入当前格子值
+                if(map_cache->m_mp[i][j] == (int)TileType::Selected)
+                    csvFile << (int)TileType::Idle; // 将选中格转换为空闲格
+                else csvFile << map_cache->m_mp[i][j]; // 写入当前格子值
                 if (j != 7) csvFile << ",";       // 最后一列不加逗号
             }
             csvFile << std::endl; // 每行结束换行

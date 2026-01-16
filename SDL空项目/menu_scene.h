@@ -14,12 +14,9 @@ public:
 	{
 		button_start_game = new TextButton(u8"开始游戏", { (1068 - 200) / 2,200,200,60 }, { 1,1,1,1 });
 		button_level_editor = new TextButton(u8"关卡编辑", { (1068 - 200) / 2,300,200,60 }, { 1,1,1,1 });
-		button_infinite = new TextButton(u8"无尽模式", { (1068 - 200) / 2,400,200,60 }, { 1,1,1,1 });
 		button_start_game->set_color_text({
 147,112,219,255 });
 		button_level_editor->set_color_text({
-147,112,219,255 });
-		button_infinite->set_color_text({
 147,112,219,255 });
 
 	}
@@ -42,7 +39,6 @@ private:
 	bool is_button = false;
 	TextButton* button_start_game = nullptr;
 	TextButton* button_level_editor = nullptr;
-	TextButton* button_infinite = nullptr;
 
 	Rabbit*rabbit = nullptr;
 	Animation*anim_target = nullptr;

@@ -5,7 +5,6 @@ void MenuScene::on_enter()
 	
 	button_start_game->reset();
 	button_level_editor->reset();
-	button_infinite->reset();
 }
 
 void MenuScene::on_exit()
@@ -18,7 +17,6 @@ void MenuScene::on_update(float delta)
 
 	button_start_game->on_update(delta, ConfigManager::get_instance()->pos_cursor);
 	button_level_editor->on_update(delta, ConfigManager::get_instance()->pos_cursor);
-	button_infinite->on_update(delta, ConfigManager::get_instance()->pos_cursor);
 	
 	if (!rabbit)
 	{
@@ -39,16 +37,12 @@ void MenuScene::on_update(float delta)
 
 	if (button_start_game->get_pushed())
 	{
+		ConfigManager::get_instance()->is_infinite = true;
 		ConfigManager::get_instance()->current_scene_type = SceneType::Game;
 	}
 	if (button_level_editor->get_pushed())
 	{
 		ConfigManager::get_instance()->current_scene_type = SceneType::Editor;
-	}
-	if (button_infinite->get_pushed())
-	{
-		ConfigManager::get_instance()->is_infinite = true;
-		ConfigManager::get_instance()->current_scene_type = SceneType::Game;
 	}
 }
 
@@ -58,7 +52,6 @@ void MenuScene::on_render(SDL_Renderer* renderer)
 
 	button_start_game->on_render(renderer);
 	button_level_editor->on_render(renderer);
-	button_infinite->on_render(renderer);
 	rabbit->on_render(renderer);
 
 	anim_target->on_render(renderer, { 700,400 }, 0, 8);
@@ -78,5 +71,4 @@ void MenuScene::on_input(const SDL_Event& event)
 
 	button_start_game->on_input(event, ConfigManager::get_instance()->pos_cursor);
 	button_level_editor->on_input(event, ConfigManager::get_instance()->pos_cursor);
-	button_infinite->on_input(event, ConfigManager::get_instance()->pos_cursor);
 }
