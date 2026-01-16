@@ -1,4 +1,5 @@
 ﻿#include"menu_scene.h"
+#include<Windows.h>
 
 void MenuScene::on_enter()
 {
@@ -55,6 +56,18 @@ void MenuScene::on_render(SDL_Renderer* renderer)
 	rabbit->on_render(renderer);
 
 	anim_target->on_render(renderer, { 700,400 }, 0, 8);
+
+	SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("github"), nullptr, &rect_dst_github);
+	if (SDL_PointInRect(&ConfigManager::get_instance()->pos_cursor, &rect_dst_github))
+	{
+		SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("github_hovered"), nullptr, &rect_dst_github);
+		static bool last_button_state = false;
+		if (is_button_down&&last_button_state!=is_button_down)
+		{
+			ShellExecute(NULL, TEXT("open"), TEXT("https://github.com/WaWaJie/OneLineDrawingGame"), NULL, NULL, SW_SHOWNORMAL);
+		}
+		last_button_state = is_button_down;
+	}
 }
 
 void MenuScene::on_input(const SDL_Event& event)
@@ -64,6 +77,12 @@ void MenuScene::on_input(const SDL_Event& event)
 	case SDL_MOUSEMOTION:
 		ConfigManager::get_instance()->pos_cursor.x = event.motion.x;
 		ConfigManager::get_instance()->pos_cursor.y = event.motion.y;
+		break;
+	case SDL_MOUSEBUTTONUP:
+		is_button_down = false;
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		is_button_down = true;
 		break;
 	default:
 		break;

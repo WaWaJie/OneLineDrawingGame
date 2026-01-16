@@ -36,10 +36,12 @@ public:
 	void on_input(const SDL_Event& event) override;
 
 private:
-	bool is_button = false;
+	bool is_button_down = false;
 	TextButton* button_start_game = nullptr;
 	TextButton* button_level_editor = nullptr;
 
 	Rabbit*rabbit = nullptr;
 	Animation*anim_target = nullptr;
+
+	SDL_Rect rect_dst_github = { 100,620,50,50 };
 };
