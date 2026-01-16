@@ -182,6 +182,7 @@ void GameScene::render_menu(SDL_Renderer* renderer)
         SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("exit_hovered"), nullptr, &rect_dst_img);
         if (is_button_down)
         {
+            Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("click"), 0);
             ConfigManager::get_instance()->current_scene_type = SceneType::Menu;
         }
     }
@@ -205,11 +206,25 @@ void GameScene::render_menu(SDL_Renderer* renderer)
         SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("in_hovered"), nullptr, &rect_dst_img);
         if (is_button_down)
         {
+            Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("click"), 0);
             import_map();
             game_restart();
         }
     }
     else SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("in"), nullptr, &rect_dst_img);   
+    rect_dst_img.x = rect_dst_img.w + 30;
+    if (SDL_PointInRect(&ConfigManager::get_instance()->pos_cursor, &rect_dst_img))
+    {
+        SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("out_hovered"), nullptr, &rect_dst_img);
+        if (is_button_down)
+        {
+            Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("click"), 0);
+            export_map();
+        }
+    }
+    else SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("out"), nullptr, &rect_dst_img);
+      
+    
 
 }
 
@@ -238,7 +253,6 @@ void GameScene::update_tile()
 	}  
 }
 
-// game_scene.cpp - 添加在文件末尾
 
 void GameScene::import_map()
 {
@@ -367,6 +381,57 @@ void GameScene::import_map()
         SDL_Log(u8"用户取消了导入操作");
     }
 }
+
+void GameScene::export_map()
+{
+    // 1. 初始化Windows保存文件对话框
+    OPENFILENAME ofn = { 0 };
+    wchar_t szSavePath[MAX_PATH] = L""; // 存储用户选择的路径（宽字符）
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = NULL; // 若有SDL窗口句柄，可填 SDL_GetWindowFromRenderer(renderer) 关联窗口
+    ofn.lpstrFilter = L"CSV文件 (*.csv)\0*.csv\0所有文件 (*.*)\0*.*\0"; // 文件筛选器
+    ofn.lpstrFile = szSavePath;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrDefExt = L"csv"; // 默认扩展名
+    ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT; // 覆盖提示、隐藏只读
+    ofn.lpstrTitle = L"导出地图为CSV"; // 对话框标题
+
+    // 2. 弹出保存对话框，用户选择路径后写入文件
+    if (GetSaveFileName(&ofn))
+    {
+        // 宽字符转多字节（适配C++文件操作）
+        char savePath[MAX_PATH] = { 0 };
+        WideCharToMultiByte(CP_ACP, 0, szSavePath, -1, savePath, MAX_PATH, NULL, NULL);
+
+        // 3. 打开文件并写入8x8地图数据
+        std::ofstream csvFile(savePath);
+        if (!csvFile.is_open())
+        {
+            SDL_Log(u8"导出失败：无法打开文件 %s", savePath);
+            return;
+        }
+
+        // 遍历map_cache的8x8数组，按行写入CSV
+        for (int i = 0; i < 8; ++i)
+        {
+            for (int j = 0; j < 8; ++j)
+            {
+                csvFile << map_cache->m_mp[i][j]; // 写入当前格子值
+                if (j != 7) csvFile << ",";       // 最后一列不加逗号
+            }
+            csvFile << std::endl; // 每行结束换行
+        }
+
+        csvFile.close();
+        SDL_Log(u8"地图导出成功！路径：%s", savePath);
+    }
+    else
+    {
+        SDL_Log(u8"用户取消了导出操作");
+    }
+}
+
 
 // 尝试生成一条单一路径的地图
 bool generate_single_path_map(int maze[8][8], std::mt19937& gen)

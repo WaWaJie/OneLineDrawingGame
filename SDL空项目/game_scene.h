@@ -44,6 +44,7 @@ private:
 	}
 
 	void import_map();
+    void export_map();
 
 	void game_restart()
 	{

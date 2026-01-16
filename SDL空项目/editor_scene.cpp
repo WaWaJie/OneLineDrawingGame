@@ -148,6 +148,7 @@ void EditorScene::render_menu(SDL_Renderer* renderer)
         SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("exit_hovered"), nullptr, &rect_dst_img);
         if (is_button_down)
         {
+            Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("click"), 0);
             ConfigManager::get_instance()->current_scene_type = SceneType::Menu;
         }
     }
@@ -170,6 +171,7 @@ void EditorScene::render_menu(SDL_Renderer* renderer)
         SDL_RenderCopy(renderer, ResourcesManager::get_instance()->find_texture("out_hovered"), nullptr, &rect_dst_img);
         if (is_button_down)
         {
+            Mix_PlayChannel(-1, ResourcesManager::get_instance()->find_audio("click"), 0);
             export_map();
         }
     }
@@ -256,4 +258,6 @@ void EditorScene::export_map()
         SDL_Log(u8"用户取消了导出操作");
     }
 }
+
+
 
