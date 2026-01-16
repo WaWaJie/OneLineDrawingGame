@@ -1,15 +1,51 @@
 # 一笔画
 实现一个一笔画游戏，你可以编辑关卡，并将他发给你的朋友，让他去玩
 
-菜单界面：
-<img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/b7b0a9a5-bfa6-4b32-b00d-557423b7aa70" />
+## 🛠️ 调试运行说明
+若需在本地调试/运行项目，请严格遵循以下步骤：
+1. 打开项目根目录下的 `.sln` 解决方案文件（适配 Visual Studio 2022 环境）；
+2. **必须将编译模式从 Debug 切换为 Release 模式**（原因：项目仅配置了 Release 环境的依赖与编译参数，Debug 模式下会触发 “无声明” 类的编译报错）；
+3. 确认环境配置无误后，即可正常编译运行。
 
-游戏界面：（点击导入按钮，可以导入关卡，并进行游玩。在无尽模式下，完成当前关卡之后，就会根据相应的算法生成一张随机的地图）
-<img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/8417a645-60f0-4dbb-b1bc-ea81a2faadf9" />
+## 💻 运行截图
+- 菜单界面：
+  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/b7b0a9a5-bfa6-4b32-b00d-557423b7aa70" />
+- 游戏界面：（点击导入按钮，可以导入关卡，并进行游玩。在无尽模式下，完成当前关卡之后，就会根据相应的算法生成一张随机的地图）
+  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/8417a645-60f0-4dbb-b1bc-ea81a2faadf9" />
+- 关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）
+  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/5fdd63dc-d184-4599-bc3d-7f2159fd421b" />
 
-关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）
-<img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/5fdd63dc-d184-4599-bc3d-7f2159fd421b" />
+## 💡 实现思路
+### 1. 核心格子相邻判定
+以“曼哈顿距离”作为格子相邻的核心判断依据：计算两个格子坐标的曼哈顿距离，若结果为1，则判定为相邻格子，为后续路径绘制、合法性校验等核心逻辑提供基础。
 
-你可以把编辑好的关卡发给你的朋友去玩！
+### 2. 游戏核心游玩逻辑
+遵循一笔画核心规则设计游玩流程：
+- 玩家通过点击/滑动操作绘制路径；
+- 基于相邻判定规则校验路径合法性（如是否连续、是否重复覆盖等）；
+- 设计通关判定逻辑，当玩家按规则完成全部目标路径/覆盖所有关键格子时，判定关卡通关。
 
+### 3. 关卡管理机制
+- **关卡编辑**：支持玩家手动绘制格子布局/路径，编辑完成后可将关卡文件导出至指定文件夹；
+- **关卡导入**：提供导入功能，加载外部关卡文件并还原对应的格子布局与通关条件；
+- **随机关卡生成**：无尽模式下，设计随机地图生成算法，玩家完成当前关卡后，自动生成符合一笔画规则的随机格子布局，实现无尽游玩体验。
 
+### 4. 可视化与交互实现（基于 SDL）
+依托SDL库完成全流程的界面渲染与交互：
+- 绘制并切换菜单界面、游戏游玩界面、关卡编辑界面；
+- 捕获玩家鼠标/键盘操作（点击、滑动等），并映射为格子选择、路径绘制等游戏内行为，保障交互的实时性与流畅性。
+
+### 5. 工程适配与运行保障
+针对Visual Studio 2022环境做编译配置优化：
+- 仅配置Release模式的依赖库与编译参数；
+- 需切换至Release模式编译运行，避免Debug模式因依赖/参数缺失触发的编译报错，确保项目可稳定调试和运行。
+
+## 🔗 三方依赖
+
+| 依赖                | 主页                                                                                   |
+|:--------------------|:---------------------------------------------------------------------------------------|
+| SDL                 | [https://github.com/libsdl-org/SDL](https://github.com/libsdl-org/SDL)                  |
+
+## 🌟 历史Star
+
+[![Stargazers over time](https://starchart.cc/WaWaJie/OneLineDrawingGame.svg?variant=adaptive)](https://starchart.cc/WaWaJie/OneLineDrawingGame)
