@@ -48,4 +48,5 @@
 
 ## 🌟 历史Star
 
-[![Stargazers over time](https://starchart.cc/WaWaJie/OneLineDrawingGame.svg?variant=adaptive)](https://starchart.cc/WaWaJie/OneLineDrawingGame)
+## 🌟 历史Star
+[![星标趋势](https://starchart.cc/WaWaJie/OneLineDrawingGame.svg?variant=adaptive)](https://starchart.cc/WaWaJie/OneLineDrawingGame)
