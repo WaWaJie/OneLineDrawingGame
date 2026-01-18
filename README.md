@@ -8,7 +8,7 @@
 3. 确认环境配置无误后，即可正常编译运行。
 
 ## 💻 运行截图
-- 菜单界面：
+- 菜单界面：</br>
 ![菜单界面](https://github.com/user-attachments/assets/65a0f604-52d8-47ea-aa5e-29172ad41171)
 
 - 游戏界面：（点击导入按钮，可以导入关卡，并进行游玩。在无尽模式下，完成当前关卡之后，就会根据相应的算法生成一张随机的地图）
@@ -16,7 +16,7 @@
 ![导入关卡](https://github.com/user-attachments/assets/93c13c59-6ce8-44ac-92a9-4a8da31f96a9)
 
 
-- 关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）
+- 关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）</br>
 ![导出关卡](https://github.com/user-attachments/assets/ae8b82ad-bde6-42b2-9a15-251d9d66decc)
 
 
