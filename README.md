@@ -46,9 +46,9 @@
 - 需切换至Release模式编译运行，避免Debug模式因依赖/参数缺失触发的编译报错，确保项目可稳定调试和运行。
 
 ## 📝 学习资源
-本人（WaWaJie）会将学习过程中的笔记整理发布在 CSDN 博客，目前已更新 OpenGL、设计模式等基础内容，感兴趣的同学可参考：
-👉 [CSDN 博客专栏](https://blog.csdn.net/2301_79921853/category_13119154.html)
-👉 [bilibili视频](https://www.bilibili.com/video/BV1AMrrBWEuc/?spm_id_from=333.1387.list.card_archive.click)
+本人（WaWaJie）会将学习过程中的笔记整理发布在 CSDN 博客，目前已更新 OpenGL、设计模式等基础内容，感兴趣的同学可参考：</br>
+👉 [CSDN 博客专栏](https://blog.csdn.net/2301_79921853/category_13119154.html)</br>
+👉 [bilibili视频](https://www.bilibili.com/video/BV1AMrrBWEuc/?spm_id_from=333.1387.list.card_archive.click)</br>
 
 ## 🔗 三方依赖
 
