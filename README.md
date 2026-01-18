@@ -9,11 +9,16 @@
 
 ## 💻 运行截图
 - 菜单界面：
-  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/b7b0a9a5-bfa6-4b32-b00d-557423b7aa70" />
+![菜单界面](https://github.com/user-attachments/assets/65a0f604-52d8-47ea-aa5e-29172ad41171)
+
 - 游戏界面：（点击导入按钮，可以导入关卡，并进行游玩。在无尽模式下，完成当前关卡之后，就会根据相应的算法生成一张随机的地图）
-  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/8417a645-60f0-4dbb-b1bc-ea81a2faadf9" />
+![游戏界面](https://github.com/user-attachments/assets/1779af0d-0849-4549-85e0-3dba15f17dd3)
+![导入关卡](https://github.com/user-attachments/assets/93c13c59-6ce8-44ac-92a9-4a8da31f96a9)
+
+
 - 关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）
-  <img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/5fdd63dc-d184-4599-bc3d-7f2159fd421b" />
+![导出关卡](https://github.com/user-attachments/assets/ae8b82ad-bde6-42b2-9a15-251d9d66decc)
+
 
 ## 💡 实现思路
 ### 1. 核心格子相邻判定
