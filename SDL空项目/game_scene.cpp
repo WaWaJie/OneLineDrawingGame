@@ -471,7 +471,7 @@ bool generate_single_path_map(int maze[8][8], std::mt19937& gen)
     bool visited[8][8] = { false };
     visited[start.x][start.y] = true;
 
-    int max_steps = 30; // 最大步数限制
+    int max_steps = 60; // 最大步数限制
     int step = 0;
 
     while ((current.x != end.x || current.y != end.y) && step < max_steps) {
@@ -734,7 +734,7 @@ void GameScene::generate_random_map()
 
     // 2. 使用多次尝试的方法，如果失败则使用保底方案
     bool success = false;
-    int max_attempts = 10; // 最多尝试10次
+    int max_attempts = 100; // 最多尝试10次
 
     for (int attempt = 0; attempt < max_attempts && !success; ++attempt) {
         success = generate_single_path_map(temp_map, gen);
