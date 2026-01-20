@@ -19,7 +19,7 @@ Application::Application()
 
        
     ResourcesManager::get_instance()->load(renderer);
-   
+    ConfigManager::get_instance()->load_ratio_back("ratio_back.txt");
 
 }
 

@@ -568,8 +568,8 @@ bool generate_single_path_map(int maze[8][8], std::mt19937& gen)
             }
         }
 
-        // 70%概率选择朝向终点的方向，30%概率选择其他方向
-        if (!preferred_moves.empty() && percent_dis(gen) % 100 < 70) {
+        // 50%概率选择朝向终点的方向，50%概率选择其他方向
+        if (!preferred_moves.empty() && percent_dis(gen) % 100 < ConfigManager::get_instance()->ratio_back) {
             std::uniform_int_distribution<> pref_dis(0, preferred_moves.size() - 1);
             next = preferred_moves[pref_dis(gen)];
         }
