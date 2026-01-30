@@ -19,6 +19,11 @@
 - 关卡编辑界面：（随便划一笔，之后点击导出按钮导出到对应的文件夹里面即可）</br>
 ![导出关卡](https://github.com/user-attachments/assets/ae8b82ad-bde6-42b2-9a15-251d9d66decc)
 
+- 更新内容：难度修改</br>
+ 之前随机生成的关卡似乎太过简单了，现在你可以通过修改ratio_back.txt中的数据去修改游戏难度（数值为0～100），数值越低，生成的路径越曲折（但是太低的话会导致生成失败，这点需要自行把控，我个人喜欢填成30）</br>
+<img width="782" height="302" alt="image" src="https://github.com/user-attachments/assets/723bc5f9-03af-4727-88ca-b1f3658c8899" /></br>
+生成的关卡如下图所示：</br>
+<img width="1070" height="807" alt="image" src="https://github.com/user-attachments/assets/3a5b3541-29c3-400d-bb36-198caef87015" /></br>
 
 ## 💡 实现思路
 ### 1. 核心格子相邻判定
